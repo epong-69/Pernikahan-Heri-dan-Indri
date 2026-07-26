@@ -22,9 +22,11 @@
             --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        body { font-family: 'Urbanist', sans-serif; background-color: var(--primary); color: var(--secondary); overflow: hidden; }
+        body { font-family: 'Urbanist', sans-serif; background-color: var(--primary); color: var(--secondary); overflow: hidden; min-height: 100vh; }
         .font-serif-elegant { font-family: 'Cinzel', serif; }
         .font-romance { font-family: 'Playfair Display', serif; font-style: italic; }
+
+        img { max-width: 100%; height: auto; display: block; }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 5px; }
@@ -49,6 +51,14 @@
         #particles-js { position: fixed; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
         .parallax { background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover; }
+        
+        @media (max-width: 768px) {
+            #particles-js { display: none; }
+            .parallax { background-attachment: scroll; }
+            .glass { backdrop-filter: blur(8px); }
+            .envelope-wrapper { width: 280px !important; height: 390px !important; }
+            .glass.p-12, .glass.p-10, .glass.p-8 { padding: 1.25rem !important; }
+        }
         
         /* Floating Animation */
         @keyframes floating {
@@ -120,7 +130,7 @@
             </div>
         </section>
 
-        <section class="py-32 px-6 flex justify-center bg-zinc-950">
+        <section class="py-20 md:py-32 px-6 flex justify-center bg-zinc-950">
             <div class="max-w-3xl text-center glass p-12" data-aos="fade-up">
                 <i class="fa-solid fa-quote-left text-3xl mb-8 opacity-20"></i>
                 <p class="font-serif-elegant text-xl md:text-2xl leading-relaxed italic opacity-80">
@@ -131,7 +141,7 @@
             </div>
         </section>
 
-        <section class="py-32 px-6">
+        <section class="py-20 md:py-32 px-6">
             <h2 class="text-center font-serif-elegant text-3xl mb-24 tracking-[0.3em]" data-aos="fade-up">MEMPELAI</h2>
             <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
                 
@@ -170,7 +180,7 @@
                     </div>
                 </div>
 
-                <div class="mt-12 glass overflow-hidden h-[400px]" data-aos="zoom-in">
+                <div class="mt-12 glass overflow-hidden h-[260px] md:h-[400px]" data-aos="zoom-in">
                     <iframe id="google-maps" src="" class="w-full h-full filter grayscale invert contrast-125" allowfullscreen="" loading="lazy"></iframe>
                 </div>
                 <div class="text-center mt-12">
@@ -179,9 +189,9 @@
             </div>
         </section>
 
-        <section class="py-32 px-4 sm:px-6">
+        <section class="py-20 md:py-32 px-4 sm:px-6">
             <h2 class="text-center font-serif-elegant text-3xl mb-12 tracking-[0.3em]" data-aos="fade-up">GALLERY</h2>
-            <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                 <a href="./img/1.jpeg" class="glightbox block overflow-hidden glass p-2 group rounded-2xl">
                     <img src="./img/1.jpeg" class="w-full h-40 sm:h-56 object-cover filter grayscale group-hover:grayscale-0 transition duration-700" alt="Galery 1">
                 </a>
@@ -197,7 +207,7 @@
             </div>
         </section>
 
-        <section class="py-32 px-6 bg-zinc-950">
+        <section class="py-20 md:py-32 px-6 bg-zinc-950">
             <div class="max-w-4xl mx-auto text-center">
                 <h2 class="font-serif-elegant text-3xl mb-12 tracking-[0.3em]" data-aos="fade-up">HADIAH PERNIKAHAN</h2>
                 <p class="opacity-60 mb-12">Doa restu Anda merupakan karunia yang sangat berarti. Namun jika ingin memberikan tanda kasih, Anda dapat melalui:</p>

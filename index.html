@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan - Eternal Love</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Urbanist:wght@300;400;600&family=Playfair+Display:italic,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* AI ADAPTIVE COLORS - Berdasarkan Foto Monokrom Anda */
+        :root {
+            --primary: #000000;
+            --secondary: #ffffff;
+            --accent: #8e8e8e;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body { font-family: 'Urbanist', sans-serif; background-color: var(--primary); color: var(--secondary); overflow: hidden; }
+        .font-serif-elegant { font-family: 'Cinzel', serif; }
+        .font-romance { font-family: 'Playfair Display', serif; font-style: italic; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--primary); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        /* Glassmorphism */
+        .glass { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; }
+
+        /* Animation Amplop */
+        .envelope-wrapper {
+            transition: all 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+            isolation: isolate;
+            perspective: 1200px;
+        }
+        .opened-flap { transform: rotateX(180deg); z-index: 0; }
+
+        /* Glow Effect */
+        .glow-text { text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+
+        /* Particles Background */
+        #particles-js { position: fixed; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+        .parallax { background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover; }
+        
+        /* Floating Animation */
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-anim { animation: floating 4s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+    <script>
+        const WEDDING_CONFIG = {
+            pria: { nama: "Hari Purnomo", ortu: "Putra dari Bpk. Tukiman & Ibu Triyati", ig: "@andiwj" },
+            wanita: { nama: "Nur Laila Indriyani", ortu: "Putri dari Bpk. Mahmudianto & Ibu Samirah", ig: "@sintaprmt" },
+            tanggal: "2026-09-24T08:08:00",
+            rekening: [
+                { bank: "BCA", nomor: "1234567890", atas_nama: "Andi Wijaya" },
+                { bank: "Seabank", nomor: "901173612399", atas_nama: "Nur Laila Indriyani" }
+            ],
+            musik: "https://www.bensound.com/bensound-music/bensound-love.mp3", // Ganti dengan URL musik
+            maps: {
+                link: "https://maps.app.goo.gl/NGiADrVnTt121Yjh8",
+                embed: "https://www.google.com/maps?q=-7.335140,109.179877&output=embed"
+            }
+        };
+    </script>
+
+    <div id="particles-js"></div>
+
+    <div id="loader" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center transition-opacity duration-1000">
+        <h2 class="font-serif-elegant text-3xl mb-4 tracking-widest animate-pulse">H & I</h2>
+        <div class="w-48 h-[1px] bg-white/20 relative">
+            <div id="progress" class="absolute h-full bg-white w-0 transition-all duration-500"></div>
+        </div>
+    </div>
+
+    <div id="envelope-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900 overflow-hidden hidden">
+        <div class="envelope-wrapper relative w-[320px] h-[450px] md:w-[400px] md:h-[500px]">
+            <div class="absolute bottom-0 w-full h-2/3 bg-zinc-800 shadow-2xl rounded-b-xl border border-white/5"></div>
+            
+            <div id="letter" class="absolute bottom-10 left-1/2 -translate-x-1/2 w-[90%] h-[80%] bg-white text-black p-8 flex flex-col items-center justify-center text-center transition-all duration-1000 z-30">
+                <p class="font-serif-elegant text-sm tracking-widest mb-4">THE WEDDING OF</p>
+                <h1 class="font-romance text-4xl mb-6">Hari & Indri</h1>
+                <button onclick="openInvitation()" class="mt-4 px-8 py-3 bg-black text-white hover:bg-zinc-800 transition-all tracking-[0.2em] text-xs font-bold relative z-10">BUKA UNDANGAN</button>
+            </div>
+
+            <div id="top-flap" class="absolute top-1/3 w-full h-2/3 bg-zinc-800 origin-top z-10 border-t border-white/10 rounded-t-xl shadow-xl" style="clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top center; backface-visibility: hidden;"></div>
+        </div>
+    </div>
+
+    <main id="main-content" class="relative z-10 opacity-0 transition-opacity duration-1000 hidden">
+        
+        <section class="min-h-screen flex flex-col items-center justify-center relative px-6 overflow-hidden">
+            <div class="absolute inset-0 z-0 scale-110 opacity-40 parallax" style="background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80');"></div>
+            <div class="text-center z-10" data-aos="zoom-in">
+                <p class="font-serif-elegant tracking-[0.5em] mb-8 text-sm md:text-base">HARI BAHAGIA KAMI</p>
+                <h1 class="font-romance text-6xl md:text-9xl mb-8 glow-text">Hari & Indri</h1>
+                <p id="wedding-date-text" class="text-xl md:text-2xl font-light tracking-widest mb-12">KAMIS, 24 SEPTEMBER 2026</p>
+                </p>
+                
+                <div class="flex gap-4 md:gap-8 justify-center mb-20">
+                    <div class="glass p-4 w-20 md:w-28"><span id="days" class="text-2xl md:text-4xl block font-bold">0</span> <small class="text-[10px] tracking-widest opacity-60">HARI</small></div>
+                    <div class="glass p-4 w-20 md:w-28"><span id="hours" class="text-2xl md:text-4xl block font-bold">0</span> <small class="text-[10px] tracking-widest opacity-60">JAM</small></div>
+                    <div class="glass p-4 w-20 md:w-28"><span id="mins" class="text-2xl md:text-4xl block font-bold">0</span> <small class="text-[10px] tracking-widest opacity-60">MENIT</small></div>
+                    <div class="glass p-4 w-20 md:w-28"><span id="secs" class="text-2xl md:text-4xl block font-bold">0</span> <small class="text-[10px] tracking-widest opacity-60">DETIK</small></div>
+                </div>
+                <i class="fa-solid fa-chevron-down animate-bounce opacity-40"></i>
+            </div>
+        </section>
+
+        <section class="py-32 px-6 flex justify-center bg-zinc-950">
+            <div class="max-w-3xl text-center glass p-12" data-aos="fade-up">
+                <i class="fa-solid fa-quote-left text-3xl mb-8 opacity-20"></i>
+                <p class="font-serif-elegant text-xl md:text-2xl leading-relaxed italic opacity-80">
+                    "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya."
+                </p>
+                <div class="h-[1px] w-20 bg-white/20 mx-auto my-8"></div>
+                <p class="text-sm tracking-widest opacity-60">QS. AR-RUM: 21</p>
+            </div>
+        </section>
+
+        <section class="py-32 px-6">
+            <h2 class="text-center font-serif-elegant text-3xl mb-24 tracking-[0.3em]" data-aos="fade-up">MEMPELAI</h2>
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+                
+                <div class="text-center" data-aos="fade-right">
+                    <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden group">
+                        <img src="img/h.jpeg"auto=format&fit=crop&q=80" class="w-full h-full object-cover filter grayscale hover:grayscale-0 transition duration-700" alt="Groom">
+                        <div class="absolute inset-0 border border-white/20 m-4 transition group-hover:m-2"></div>
+                    </div>
+                    <h3 class="font-romance text-4xl mb-4" id="pria-nama">Hari Purnomo</h3>
+                    <p class="text-sm opacity-60 mb-6" id="pria-ortu">Putra dari Bpk. Tukiman & Ibu Triyati</p>
+                    <a href="#" class="inline-block glass px-6 py-2 rounded-full hover:bg-white hover:text-black transition duration-500"><i class="fa-brands fa-instagram mr-2"></i> Instagram</a>
+                </div>
+
+                <div class="text-center" data-aos="fade-left">
+                    <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80" class="w-full h-full object-cover filter grayscale hover:grayscale-0 transition duration-700" alt="Bride">
+                        <div class="absolute inset-0 border border-white/20 m-4 transition group-hover:m-2"></div>
+                    </div>
+                    <h3 class="font-romance text-4xl mb-4" id="wanita-nama">Nur Laila Indriyani</h3>
+                    <p class="text-sm opacity-60 mb-6" id="wanita-ortu">Putri dari Bpk. Mahmudianto & Ibu Samirah</p>
+                    <a href="#" class="inline-block glass px-6 py-2 rounded-full hover:bg-white hover:text-black transition duration-500"><i class="fa-brands fa-instagram mr-2"></i> Instagram</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-32 px-6 bg-zinc-950 relative overflow-hidden">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex justify-center">
+                    <div class="glass p-10 md:p-16 w-full md:w-2/3 lg:w-1/2 text-center" data-aos="fade-up">
+                        <h4 class="font-serif-elegant text-2xl mb-8 border-b border-white/10 pb-4">AKAD NIKAH</h4>
+                        <div class="space-y-6 opacity-80">
+                            <p><i class="fa-regular fa-calendar-check mr-3"></i> KAMIS, 24 SEP 2026</p>
+                            <p><i class="fa-regular fa-clock mr-3"></i> 08:00 - 10:00 WIB</p>
+                            <p><i class="fa-solid fa-location-dot mr-3"></i> Sunyalangu RT 04 / RW 06</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 glass overflow-hidden h-[400px]" data-aos="zoom-in">
+                    <iframe id="google-maps" src="" class="w-full h-full filter grayscale invert contrast-125" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <div class="text-center mt-12">
+                    <a id="maps-link" href="#" target="_blank" rel="noopener noreferrer" class="px-12 py-4 bg-white text-black hover:bg-accent transition duration-500 font-bold tracking-widest text-sm">📍 BUKA GOOGLE MAPS</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-32 px-4 sm:px-6">
+            <h2 class="text-center font-serif-elegant text-3xl mb-12 tracking-[0.3em]" data-aos="fade-up">GALLERY</h2>
+            <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                <a href="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80" class="glightbox block overflow-hidden glass p-2 group rounded-2xl">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80" class="w-full h-40 sm:h-56 object-cover filter grayscale group-hover:grayscale-0 transition duration-700" alt="Galery 1">
+                </a>
+                <a href="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80" class="glightbox block overflow-hidden glass p-2 group rounded-2xl">
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80" class="w-full h-40 sm:h-56 object-cover filter grayscale group-hover:grayscale-0 transition duration-700" alt="Galery 2">
+                </a>
+                <a href="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80" class="glightbox block overflow-hidden glass p-2 group rounded-2xl sm:col-span-2 md:col-span-1">
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80" class="w-full h-40 sm:h-56 object-cover filter grayscale group-hover:grayscale-0 transition duration-700" alt="Galery 3">
+                </a>
+                <a href="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80" class="glightbox block overflow-hidden glass p-2 group rounded-2xl">
+                    <img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80" class="w-full h-40 sm:h-56 object-cover filter grayscale group-hover:grayscale-0 transition duration-700" alt="Galery 4">
+                </a>
+            </div>
+        </section>
+
+        <section class="py-32 px-6 bg-zinc-950">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="font-serif-elegant text-3xl mb-12 tracking-[0.3em]" data-aos="fade-up">HADIAH PERNIKAHAN</h2>
+                <p class="opacity-60 mb-12">Doa restu Anda merupakan karunia yang sangat berarti. Namun jika ingin memberikan tanda kasih, Anda dapat melalui:</p>
+                
+                <div class="grid md:grid-cols-2 gap-6" id="container-rekening">
+                    </div>
+            </div>
+        </section>
+
+        <footer class="py-20 text-center opacity-40 text-xs tracking-[0.3em] font-light">
+            <p class="mb-4">DENGAN PENUH CINTA</p>
+            <p class="font-serif-elegant text-lg mb-8">HARI & INDRI</p>
+        </footer>
+
+    </main>
+
+    <div id="player-container" class="fixed bottom-10 left-10 z-[100] hidden">
+        <button id="musicToggle" class="w-12 h-12 bg-white text-black rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition">
+            <i class="fa-solid fa-music"></i>
+        </button>
+        <audio id="bgMusic" loop>
+            <source src="" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+    <script>
+        // 1. Initial Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({ duration: 1000, once: true });
+            loadWeddingData();
+            
+            // Progress Bar Animation
+            let prg = 0;
+            const progressInterval = setInterval(() => {
+                prg += 5;
+                document.getElementById('progress').style.width = prg + '%';
+                if(prg >= 100) {
+                    clearInterval(progressInterval);
+                    document.getElementById('loader').classList.add('opacity-0');
+                    setTimeout(() => {
+                        document.getElementById('loader').style.display = 'none';
+                        document.getElementById('envelope-screen').classList.remove('hidden');
+                    }, 1000);
+                }
+            }, 50);
+        });
+
+        function loadWeddingData() {
+            document.getElementById('pria-nama').innerText = WEDDING_CONFIG.pria.nama;
+            document.getElementById('pria-ortu').innerText = WEDDING_CONFIG.pria.ortu;
+            document.getElementById('wanita-nama').innerText = WEDDING_CONFIG.wanita.nama;
+            document.getElementById('wanita-ortu').innerText = WEDDING_CONFIG.wanita.ortu;
+            document.getElementById('google-maps').src = WEDDING_CONFIG.maps.embed;
+            document.getElementById('maps-link').href = WEDDING_CONFIG.maps.link;
+            document.getElementById('bgMusic').querySelector('source').src = WEDDING_CONFIG.musik;
+            document.getElementById('bgMusic').load();
+
+            const rekContainer = document.getElementById('container-rekening');
+            WEDDING_CONFIG.rekening.forEach(rek => {
+                rekContainer.innerHTML += `
+                    <div class="glass p-8 relative group overflow-hidden">
+                        <div class="text-left">
+                            <p class="text-xs tracking-widest opacity-40 mb-2">${rek.bank}</p>
+                            <p class="text-xl font-bold tracking-widest mb-1" id="rek-${rek.nomor}">${rek.nomor}</p>
+                            <p class="text-sm opacity-60 italic">a.n ${rek.atas_nama}</p>
+                        </div>
+                        <button onclick="copyToClipboard('${rek.nomor}')" class="absolute right-8 top-1/2 -translate-y-1/2 text-xs opacity-40 hover:opacity-100 transition"><i class="fa-regular fa-copy mr-2"></i> SALIN</button>
+                    </div>
+                `;
+            });
+        }
+
+        // 2. Invitation Flow
+        function openInvitation() {
+            const flap = document.getElementById('top-flap');
+            const letter = document.getElementById('letter');
+            const music = document.getElementById('bgMusic');
+            
+            flap.style.transform = 'rotateX(180deg)';
+            flap.style.zIndex = '0';
+            
+            setTimeout(() => {
+                letter.style.transform = 'translate(-50%, -100%)';
+                letter.style.opacity = '0';
+                document.getElementById('envelope-screen').style.opacity = '0';
+                
+                setTimeout(() => {
+                    document.getElementById('envelope-screen').style.display = 'none';
+                    document.getElementById('main-content').classList.remove('hidden');
+                    setTimeout(() => {
+                        document.getElementById('main-content').style.opacity = '1';
+                        document.body.style.overflow = 'auto';
+                        document.getElementById('player-container').classList.remove('hidden');
+                        music.play();
+                    }, 100);
+                }, 1000);
+            }, 600);
+        }
+
+        // 3. Music Control
+        const musicBtn = document.getElementById('musicToggle');
+        const audio = document.getElementById('bgMusic');
+        let isPlaying = true;
+
+        musicBtn.addEventListener('click', () => {
+            if(isPlaying) {
+                audio.pause();
+                musicBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+            } else {
+                audio.play();
+                musicBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // 4. Countdown Timer
+        const targetDate = new Date(WEDDING_CONFIG.tanggal).getTime();
+        const countdown = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            
+            if (diff < 0) {
+                clearInterval(countdown);
+                document.getElementById('wedding-date-text').innerText = "HARI BAHAGIA TELAH TIBA ❤️";
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = d;
+            document.getElementById('hours').innerText = h;
+            document.getElementById('mins').innerText = m;
+            document.getElementById('secs').innerText = s;
+        }, 1000);
+
+        // 5. Utility Functions
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Nomor Rekening Disalin: " + text);
+            });
+        }
+
+        const glightbox = GLightbox({ selector: '.glightbox' });
+
+        // 6. Particles JS Initializer
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "opacity": { "value": 0.2, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": false },
+                "move": { "enable": true, "speed": 1, "direction": "top", "random": true, "straight": false, "out_mode": "out" }
+            }
+        });
+    </script>
+</body>
+</html>
